@@ -3,13 +3,13 @@ import pandas as pd
 import joblib
 import re
 
-# 1. Load the files we saved in Step 1
+# 1. Load the files
 df = pd.read_pickle("anime_data.pkl")
 model = joblib.load("knn_model.pkl")
 matrix = joblib.load("matrix.pkl")
 
 
-# 2. Your smart cleaning function
+# 2. Cleaning function
 def get_root(t):
     first_word = t.split()[0].lower()
     return re.sub(r'[^a-z0-9]', '', first_word)
@@ -41,7 +41,7 @@ if target_anime:
         root = get_root(row['title'])
 
         if root not in seen_roots:
-            # This logic places 1-5 in the first row and 6-10 in the second row
+            # Places 1-5 in the first row and 6-10 in the second row
             with cols[count % 5]:
                 st.image(row['image'], use_container_width=True)
                 st.write(f"**{row['title']}**")
@@ -58,7 +58,7 @@ with st.expander("ℹ️ How the Recommendation System Works (Technical Details)
     Instead of just looking at names, it calculates a weighted score based on:
     """)
 
-    # Create a small table to show your logic
+    # Create a small table to show logic
     stats = {
         "Feature": ["Themes", "Synopsis", "Genres", "Demographics", "Studio", "Anime format (e.g. Series, Movie))"],
         "Weight": ["10.0", "5.0", "7.0", "15.0", "0.5", "0.5"],
@@ -68,4 +68,5 @@ with st.expander("ℹ️ How the Recommendation System Works (Technical Details)
     st.table(stats)
 
     st.info(
+
         "**Methodology:** The text data is vectorized using TF-IDF, combined into a sparse matrix, and measured using Cosine Similarity.")
